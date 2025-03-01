@@ -25,7 +25,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL, 'https://leadscout.netlify.app'] // Add your actual deployed frontend URL
+    ? [process.env.FRONTEND_URL, 'https://leadscout.netlify.app', 'https://leadscout-seven.vercel.app'] 
     : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true
 }));
@@ -33,6 +33,11 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 app.use(morgan('dev'));
+
+// Health check endpoint for Railway
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is healthy' });
+});
 
 // Configure global timeout handling
 app.use(timeout.handler({
@@ -78,12 +83,29 @@ app.use('/api/auth', authRoutes);
 app.use('/api/prospecting', prospectingRoutes);
 app.use('/api/user', userRoutes);
 
-// Serve static assets in production
+// Serve static assets in production - keep for Railway deployment and local development
+// Check if we're in production and not running on Railway static URL service
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
-  });
+  // Check if client/build directory exists before trying to serve from it
+  const buildPath = path.join(__dirname, '../client/build');
+  try {
+    if (require('fs').existsSync(buildPath)) {
+      console.log('Serving static assets from client/build directory');
+      app.use(express.static(buildPath));
+      app.get('*', (req, res) => {
+        // Only serve index.html for non-API routes to avoid interfering with API routes
+        if (!req.path.startsWith('/api/')) {
+          res.sendFile(path.resolve(buildPath, 'index.html'));
+        } else {
+          next();
+        }
+      });
+    } else {
+      console.log('Client build directory not found. Not serving static files.');
+    }
+  } catch (err) {
+    console.log('Error checking for static files directory:', err.message);
+  }
 }
 
 // Error handling middleware
@@ -188,49 +210,67 @@ const startServer = async () => {
     }
   };
   
-  // Start the server on port 5000 by default
+  // Simplified PORT handling for Railway while keeping fallback port options for local development
   const defaultPort = parseInt(process.env.PORT) || 5000;
-  const tryPorts = [defaultPort, 5001, 5002, 5003]; // Try ports 5000, 5001, 5002, or 5003
-  let server;
   
-  // Function to try starting server on different ports
-  const startServerOnPort = (portIndex) => {
-    if (portIndex >= tryPorts.length) {
-      console.error('Failed to start server. All ports are in use.');
-      process.exit(1);
-      return;
-    }
-    
-    const PORT = tryPorts[portIndex];
+  // For Railway, we'll just use the provided PORT, for local we'll try multiple ports
+  if (process.env.RAILWAY_ENVIRONMENT) {
+    // We're on Railway, just use the provided port
+    const PORT = defaultPort;
     
     try {
       server = app.listen(PORT, () => {
-        console.log(`Server running at http://localhost:${PORT}`);
+        console.log(`Server running on port ${PORT}`);
         console.log(`Database status: ${dbInitialized ? 'Connected' : 'Disconnected'}`);
-        console.log('Press Ctrl+C to stop the server');
-        
-        // If running on a different port than the explicitly provided default, print instructions for client
-        if (PORT !== defaultPort) {
-          console.log(`\n⚠️ NOTE: Server running on different port than default (${defaultPort})`);
-          console.log('If client cannot connect, you may need to:');
-          console.log(`1. Set REACT_APP_API_URL=http://localhost:${PORT}/api in client environment`);
-          console.log('2. Or update the client baseURL in src/services/api.js');
-          console.log(`3. Restart the client application with npm start\n`);
-        }
       });
     } catch (error) {
-      if (error.code === 'EADDRINUSE') {
-        console.log(`Port ${PORT} is in use, trying next port...`);
-        startServerOnPort(portIndex + 1);
-      } else {
-        console.error('Error starting server:', error);
-        process.exit(1);
-      }
+      console.error('Error starting server:', error);
+      process.exit(1);
     }
-  };
-  
-  // Start attempting to start the server
-  startServerOnPort(0);
+  } else {
+    // We're in local development, try multiple ports
+    const tryPorts = [defaultPort, 5001, 5002, 5003];
+    let server;
+    
+    // Function to try starting server on different ports
+    const startServerOnPort = (portIndex) => {
+      if (portIndex >= tryPorts.length) {
+        console.error('Failed to start server. All ports are in use.');
+        process.exit(1);
+        return;
+      }
+      
+      const PORT = tryPorts[portIndex];
+      
+      try {
+        server = app.listen(PORT, () => {
+          console.log(`Server running at http://localhost:${PORT}`);
+          console.log(`Database status: ${dbInitialized ? 'Connected' : 'Disconnected'}`);
+          console.log('Press Ctrl+C to stop the server');
+          
+          // If running on a different port than the explicitly provided default, print instructions for client
+          if (PORT !== defaultPort) {
+            console.log(`\n⚠️ NOTE: Server running on different port than default (${defaultPort})`);
+            console.log('If client cannot connect, you may need to:');
+            console.log(`1. Set REACT_APP_API_URL=http://localhost:${PORT}/api in client environment`);
+            console.log('2. Or update the client baseURL in src/services/api.js');
+            console.log(`3. Restart the client application with npm start\n`);
+          }
+        });
+      } catch (error) {
+        if (error.code === 'EADDRINUSE') {
+          console.log(`Port ${PORT} is in use, trying next port...`);
+          startServerOnPort(portIndex + 1);
+        } else {
+          console.error('Error starting server:', error);
+          process.exit(1);
+        }
+      }
+    };
+    
+    // Start attempting to start the server
+    startServerOnPort(0);
+  }
   
   // Handle different signals for graceful shutdown
   process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
