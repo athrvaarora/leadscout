@@ -1,7 +1,7 @@
 # LeadScout
 
 <div align="center">
-  <img src="https://github.com/your-username/leadscout/raw/main/client/public/leadscout-logo.png" alt="LeadScout Logo" width="200">
+
   <p><strong>AI-powered B2B prospecting for sales professionals</strong></p>
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -47,27 +47,27 @@ With LeadScout, sales teams can:
 ## 🖥️ Screenshots
 
 <div align="center">
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/1.png" alt="LeadScout Landing Page" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/1.png" alt="LeadScout Landing Page" width="80%">
   <p><i>LeadScout Landing Page</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/2.png" alt="LeadScout Landing Page" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/2.png" alt="LeadScout Landing Page" width="80%">
   <p><i>LeadScout Landing Page</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/3.png" alt="LeadScout Landing Page" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/3.png" alt="LeadScout Landing Page" width="80%">
  <p><i>LeadScout Landing Page</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/4.png" alt="LeadScout Landing Page" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/4.png" alt="LeadScout Landing Page" width="80%">
   <p><i>LeadScout Landing Page</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/5.png" alt="Product Description Page" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/5.png" alt="Product Description Page" width="80%">
   <p><i>Product Description Page</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/7.png" alt="Finding Prospect Loading " width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/7.png" alt="Finding Prospect Loading " width="80%">
   <p><i>Finding Prospect Loading</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/8.png" alt="Prospect Listing Page" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/8.png" alt="Prospect Listing Page" width="80%">
   <p><i>LProspect Listing Page</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/9.png" alt="Discovering Contacts Loading" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/9.png" alt="Discovering Contacts Loading" width="80%">
   <p><i>Discovering Contacts Loading</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/10.png" alt="Leads at the target Company" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/10.png" alt="Leads at the target Company" width="80%">
   <p><i>Leads at the target Company</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/11.png" alt="Email Template for Outreach" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/11.png" alt="Email Template for Outreach" width="80%">
   <p><i>Email Template for Outreach</i></p>
-  <img src="https://github.com/your-username/leadscout/raw/main/Screenshot/12.png" alt="Email Template for Outreach" width="80%">
+  <img src="https://github.com/athrvaarora/leadscout/raw/main/Screenshot/12.png" alt="Email Template for Outreach" width="80%">
   <p><i>Email Template for Outreach</i></p>
   
 </div>
